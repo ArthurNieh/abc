@@ -284,8 +284,10 @@ Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters )
     pMan->pSpec = Extra_UtilStrsav( pNtk->pSpec );
     // transfer the pointers to the basic nodes
     Abc_AigConst1(pNtk)->pCopy = (Abc_Obj_t *)Aig_ManConst1(pMan);
+    printf("Cis of Ntk:\n");
     Abc_NtkForEachCi( pNtk, pObj, i )
     {
+        printf("id=<%d>, name=<%s>\n", pObj->Id, Abc_ObjName(pObj));
         pObj->pCopy = (Abc_Obj_t *)Aig_ObjCreateCi(pMan);
         // initialize logic level of the CIs
         ((Aig_Obj_t *)pObj->pCopy)->Level = pObj->Level;
