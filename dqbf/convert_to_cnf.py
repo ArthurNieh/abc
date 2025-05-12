@@ -80,7 +80,7 @@ def parse_abc_output():
     return ids, vars, nCis, nVar
 
 def determine_quantifier(ids, vars, nCis, nVar):
-    vec_u, vec_v = [], []
+    vec_u, vec_v, vec_w = [], [], []
     vec_c, vec_d = [], []
     vec_others = []
     vec_pi = []
@@ -93,17 +93,22 @@ def determine_quantifier(ids, vars, nCis, nVar):
             vec_u.append(ids[i])
         elif 'v' in vars[i]:
             vec_v.append(ids[i])
+        ### variable w is for triangular free and edge coloring
+        elif 'w' in vars[i]:
+            vec_w.append(ids[i])
         elif 'c' in vars[i]:
             vec_c.append(ids[i])
         elif 'd' in vars[i]:
             vec_d.append(ids[i])
-        elif 'pi' in vars[i]:
+        ### variable pi is for iscas coloring
+        ### variable x, y, z are for triangular free amd edge coloring
+        elif 'pi' in vars[i] or 'x' in vars[i] or 'y' in vars[i] or 'z' in vars[i]:
             vec_pi.append(ids[i])
         else:
             vec_others.append(ids[i])
-    return vec_u, vec_v, vec_c, vec_d, vec_pi, vec_others
+    return vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others
 
-def gen_DQDIMACS(cnf_file, v_u, v_v, v_c, v_d, v_pi, v_others):
+def gen_DQDIMACS(cnf_file, v_u, v_v, v_w, v_c, v_d, v_pi, v_others):
             
     with open(cnf_file, 'r') as f:
         lines = f.readlines()
@@ -114,12 +119,14 @@ def gen_DQDIMACS(cnf_file, v_u, v_v, v_c, v_d, v_pi, v_others):
                 f.write(line)
                 ignore = False
                 
-                if len(v_u) > 0 or len(v_v) > 0:
+                if len(v_u) > 0 or len(v_v) > 0 or len(v_w) > 0:
                     f.write('a ')
                     if len(v_u) > 0:
                         f.write(''.join(str(u) + ' ' for u in v_u))
                     if len(v_v) > 0:
                         f.write(''.join(str(v) + ' ' for v in v_v))
+                    if len(v_w) > 0:
+                        f.write(''.join(str(w) + ' ' for w in v_w))
                     if len(v_pi) > 0:
                         f.write(''.join(str(p) + ' ' for p in v_pi))
                     f.write('0\n')
@@ -155,7 +162,7 @@ if __name__ == '__main__':
     print("Number of Cis = " + str(nCis))
     print("Number of Vars = " + str(nVar))
 
-    vec_u, vec_v, vec_c, vec_d, vec_pi, vec_others = determine_quantifier(ids, vars, nCis, nVar)
+    vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others = determine_quantifier(ids, vars, nCis, nVar)
     
-    gen_DQDIMACS(cnf_output, vec_u, vec_v, vec_c, vec_d, vec_pi, vec_others)
+    gen_DQDIMACS(cnf_output, vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others)
 
