@@ -80,7 +80,7 @@ def parse_abc_output():
     return ids, vars, nCis, nVar
 
 def determine_quantifier(ids, vars, nCis, nVar):
-    vec_u, vec_v, vec_w = [], [], []
+    vec_u, vec_v, vec_w, vec_t = [], [], [], []
     vec_c, vec_d = [], []
     vec_others = []
     vec_pi = []
@@ -96,6 +96,9 @@ def determine_quantifier(ids, vars, nCis, nVar):
         ### variable w is for triangular free and edge coloring
         elif 'w' in vars[i]:
             vec_w.append(ids[i])
+        ### variable w, t is for triangle coloring
+        elif 't' in vars[i]:
+            vec_t.append(ids[i])
         elif 'c' in vars[i]:
             vec_c.append(ids[i])
         elif 'd' in vars[i]:
@@ -106,7 +109,7 @@ def determine_quantifier(ids, vars, nCis, nVar):
             vec_pi.append(ids[i])
         else:
             vec_others.append(ids[i])
-    return vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others
+    return vec_u, vec_v, vec_w, vec_t, vec_c, vec_d, vec_pi, vec_others
 
 def gen_DQDIMACS(cnf_file, v_u, v_v, v_w, v_c, v_d, v_pi, v_others):
             
@@ -162,7 +165,7 @@ if __name__ == '__main__':
     print("Number of Cis = " + str(nCis))
     print("Number of Vars = " + str(nVar))
 
-    vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others = determine_quantifier(ids, vars, nCis, nVar)
+    vec_u, vec_v, vec_w, vec_t, vec_c, vec_d, vec_pi, vec_others = determine_quantifier(ids, vars, nCis, nVar)
     
     gen_DQDIMACS(cnf_output, vec_u, vec_v, vec_w, vec_c, vec_d, vec_pi, vec_others)
 
